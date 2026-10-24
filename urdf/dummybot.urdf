@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<robot name="dummybot">
+
+    <!-- ========================================== -->
+    <!-- 1. BASE LINK                               -->
+    <!-- ========================================== -->
+    <link name="base_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry><box size="0.4 0.2 0.1"/></geometry>
+            <material name=""><color rgba="0.1 0.0 0.5 1.0"/></material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry><box size="0.4 0.2 0.1"/></geometry>
+        </collision>
+    </link>
+
+    <!-- ========================================== -->
+    <!-- 2. WHEELS                                  -->
+    <!-- ========================================== -->
+    <link name="left_wheel">
+        <inertial><mass value="1.0"/><inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/></inertial>
+        <visual>
+            <geometry><cylinder radius="0.1" length="0.05"/></geometry>
+            <material name=""><color rgba="0.5 0.2 0.1 1.0"/></material>
+        </visual>
+        <collision><geometry><cylinder radius="0.1" length="0.05"/></geometry></collision>
+    </link>
+
+    <link name="right_wheel">
+        <inertial><mass value="1.0"/><inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/></inertial>
+        <visual>
+            <geometry><cylinder radius="0.1" length="0.05"/></geometry>
+            <material name=""><color rgba="0.5 0.2 0.1 1.0"/></material>
+        </visual>
+        <collision><geometry><cylinder radius="0.1" length="0.05"/></geometry></collision>
+    </link>
+
+    <!-- ========================================== -->
+    <!-- 3. CASTER WHEELS                           -->
+    <!-- ========================================== -->
+    <link name="front_caster_wheel">
+        <inertial><mass value="0.1"/><inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/></inertial>
+        <visual><geometry><sphere radius="0.05"/></geometry><material name=""><color rgba="0.1 0.1 0.1 1.0"/></material></visual>
+        <collision><geometry><sphere radius="0.05"/></geometry></collision>
+    </link>
+
+    <link name="back_caster_wheel">
+        <inertial><mass value="0.1"/><inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/></inertial>
+        <visual><geometry><sphere radius="0.05"/></geometry><material name=""><color rgba="0.1 0.1 0.1 1.0"/></material></visual>
+        <collision><geometry><sphere radius="0.05"/></geometry></collision>
+    </link>
+
+    <!-- ========================================== -->
+    <!-- 4. SENSORS (LiDAR & Camera)                -->
+    <!-- ========================================== -->
+    <link name="laser_link">
+        <inertial><mass value="0.1"/><inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/></inertial>
+        <visual><geometry><cylinder radius="0.05" length="0.04"/></geometry><material name=""><color rgba="0.1 0.1 0.1 1.0"/></material></visual>
+        <collision><geometry><cylinder radius="0.05" length="0.04"/></geometry></collision>
+    </link>
+
+    <link name="camera_link">
+        <inertial><mass value="0.1"/><inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/></inertial>
+        <visual><geometry><box size="0.03 0.08 0.03"/></geometry><material name=""><color rgba="0.0 0.0 0.0 1.0"/></material></visual>
+        <collision><geometry><box size="0.03 0.08 0.03"/></geometry></collision>
+    </link>
+
+    <!-- ========================================== -->
+    <!-- 5. JOINTS                                  -->
+    <!-- ========================================== -->
+    <joint name="left_wheel_joint" type="continuous">
+        <origin xyz="0.0 0.15 0.0" rpy="0.0 1.5705 1.5705"/>
+        <parent link="base_link"/><child link="left_wheel"/><axis xyz="0.0 0.0 1.0"/>
+    </joint>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <origin xyz="0.0 -0.15 0.0" rpy="0.0 1.5705 1.5705"/>
+        <parent link="base_link"/><child link="right_wheel"/><axis xyz="0.0 0.0 1.0"/>
+    </joint>
+
+    <joint name="front_caster_wheel_joint" type="fixed">
+        <origin xyz="0.15 0.0 -0.05" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/><child link="front_caster_wheel"/>
+    </joint>
+
+    <joint name="back_caster_wheel_joint" type="fixed">
+        <origin xyz="-0.15 0.0 -0.05" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/><child link="back_caster_wheel"/>
+    </joint>
+
+    <joint name="laser_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.1" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/><child link="laser_link"/>
+    </joint>
+
+    <joint name="camera_joint" type="fixed">
+        <origin xyz="0.21 0.0 0.0" rpy="0.0 0.2 0.0"/>
+        <parent link="base_link"/><child link="camera_link"/>
+    </joint>
+
+    <!-- ========================================== -->
+    <!-- 6. GAZEBO HARMONIC PLUGINS (ROS 2 Jazzy)   -->
+    <!-- ========================================== -->
+    
+    <!-- Diff Drive Plugin (Motors) -->
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+            <wheel_separation>0.3</wheel_separation>
+            <wheel_radius>0.1</wheel_radius>
+            <odom_publish_frequency>10</odom_publish_frequency>
+            <topic>cmd_vel</topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_link</child_frame_id>
+        </plugin>
+    </gazebo>
+
+    <!-- Sensor Plugins (Required for LiDAR/Camera) -->
+    <gazebo>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"/>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    </gazebo>
+
+</robot>
